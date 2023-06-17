@@ -1,56 +1,71 @@
-import React from 'react'
+/* eslint-disable no-unused-vars */
+import axios from 'axios';
+import React from 'react';
+import { useState } from 'react';
 
+const URL = 'http://localhost:9000/api/result'
+const theMessage = ["You can't go left", "You can't go up", "You can't go down", "You can't go right", ""]
+const coordinates = ["(1,1)", "(2,1)", "(3,1)",
+                     "(1,2)", "(2,2)", "(3,2)",
+                     "(1,3)", "(2,3)", "(3,3)"]
+const dontMoveRight = [2, 5, 8]
+const dontMoveLeft = [0, 3, 6]
+const up = 2
+const down = 6 
 // Suggested initial states
 const initialMessage = ''
 const initialEmail = ''
 const initialSteps = 0
 const initialIndex = 4 // the index the "B" is at
 
-const initialState = {
-  message: initialMessage,
-  email: initialEmail,
-  index: initialIndex,
-  steps: initialSteps,
-}
+// const initialState = {
+// message: initialMessage,
+// email: initialEmail,
+ // index: initialIndex,
+ // steps: initialSteps,
+//} 
 
 export default class AppClass extends React.Component {
-  // THE FOLLOWING HELPERS ARE JUST RECOMMENDATIONS.
-  // You can delete them and build your own logic from scratch.
-
-  getXY = () => {
-    // It it not necessary to have a state to track the coordinates.
-    // It's enough to know what index the "B" is at, to be able to calculate them.
+  constructor(props) {
+    super(props);
+    this.state = {
+      message: initialMessage,
+      email: initialEmail,
+      index: initialIndex,
+      steps: initialSteps,
+      click: 4,
+      finalemail: "",
+      displayon: false
+    }
   }
-
-  getXYMessage = () => {
-    // It it not necessary to have a state to track the "Coordinates (2, 2)" message for the user.
-    // You can use the `getXY` helper above to obtain the coordinates, and then `getXYMessage`
-    // returns the fully constructed string.
+  changingTheBLeft = (e) => {
+    dontMoveLeft.includes(this.state.index) ? this.setState({ ...this.state }) : this.setState({ ...this.state, steps: this.state.steps + 1, index: this.state.index - 1 });
+    if (e.target.id === "left" && dontMoveLeft.includes(this.state.index)) {
+      this.setState({ ...this.state, click: 0 })
+    } else {
+      this.setState({...this.state, steps: this.state.steps + 1, index: this.state.index - 1, click: 3 })
+    }
   }
-
-  reset = () => {
-    // Use this helper to reset all states to their initial values.
+  changingTheBRight = (e) => {
+    dontMoveRight.includes(this.state.index) ? this.setState({ ...this.state }) : this.setState({ ...this.state, steps: this.state.steps + 1, index: this.state.index + 1 });
+    if (e.target.id === "right" && dontMoveRight.includes(this.state.index)) {
+      this.setState({ ...this.state, click: 3 })
+    } else {
+      this.setState({...this.state, steps: this.state.steps + 1, index: this.state.index + 1, click: 4 })
+    }
   }
+  changingTheBUp = (e) => {
+    this.state.index <= up ? this.setState({ ...this.state }) : this.setState({ ...this.state, steps: this.state.steps + 1, index: this.state.index - 3 });
+    if (e.target.id === "up" && this.state.index <= up) {
+      this.setState({ ...AppClass.this.state, click: 1 })
+    } else {
+      this.setState({ ...this.state, steps: this.state.steps + 1, index: this.state.index - 3, click: 4})
+    }
+  } 
+  
+ }
 
-  getNextIndex = (direction) => {
-    // This helper takes a direction ("left", "up", etc) and calculates what the next index
-    // of the "B" would be. If the move is impossible because we are at the edge of the grid,
-    // this helper should return the current index unchanged.
-  }
-
-  move = (evt) => {
-    // This event handler can use the helper above to obtain a new index for the "B",
-    // and change any states accordingly.
-  }
-
-  onChange = (evt) => {
-    // You will need this to update the value of the input.
-  }
-
-  onSubmit = (evt) => {
-    // Use a POST request to send a payload to the server.
-  }
-
+  
   render() {
     const { className } = this.props
     return (
