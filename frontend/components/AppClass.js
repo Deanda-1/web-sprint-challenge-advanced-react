@@ -77,6 +77,8 @@ export default class AppClass extends React.Component {
    onSubmitHandler = (e) => {
     e.preventDefault()
     const addstuff = { x: coordinates[this.state.index][1], y: coordinates[this.state.index][3], steps: this.state.steps, email: this.state.email };
+    console.log(addstuff);
+    
     axios.post("http://localhost:9000/api/result", addstuff)
     .then(resp => {
       const display = resp.data.message

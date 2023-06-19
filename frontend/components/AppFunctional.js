@@ -114,7 +114,7 @@ function onsubmithandler(e) {
         <button onClick={changestepsup} id="up">UP</button>
         <button onClick={changestepsright} id="right">RIGHT</button>
         <button onClick={changestepsdown} id="down">DOWN</button>
-        <button onClick={reset} id="reset">reset</button>
+        <button onClick={reset} id="reset">RESET</button>
       </div>
       <form onSubmit={onsubmithandler}>
         <input value={email} onChange={onchangehandler} id="email" type="email" placeholder="type email"></input>
