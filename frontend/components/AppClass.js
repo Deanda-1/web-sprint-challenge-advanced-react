@@ -9,8 +9,8 @@ const themessage = ["You can't go left", "You can't go up", "You can't go down",
 const coordinates = ["(1,1)", "(2,1)", "(3,1)",
                      "(1,2)", "(2,2)", "(3,2)",
                      "(1,3)", "(2,3)", "(3,3)"]
-const dontMoveRight = [2, 5, 8]
-const dontMoveLeft = [0, 3, 6]
+const dontmoveright = [2, 5, 8]
+const dontmoveleft = [0, 3, 6]
 const up = 2
 const down = 6 
 // Suggested initial states
@@ -19,12 +19,12 @@ const initialEmail = ''
 const initialSteps = 0
 const initialIndex = 4 // the index the "B" is at
 
-// const initialState = {
-// message: initialMessage,
-// email: initialEmail,
- // index: initialIndex,
- // steps: initialSteps,
-//} 
+const initialState = {
+message: initialMessage,
+email: initialEmail,
+ index: initialIndex,
+ steps: initialSteps,
+} 
 
 export default class AppClass extends React.Component {
   constructor(props) {
@@ -39,26 +39,40 @@ export default class AppClass extends React.Component {
       displayon: false
     }
   }
+  getNextIndex = (direction) => {
+    const { index } = this.state
+    switch (direction) {
+      case 'up':
+        return (index < 3) ? index : index - 3
+      case 'down':
+        return (index > 5) ? index : index + 3
+      case 'left':
+        return (index % 3 === 0) ? index : index - 1
+      case 'right':
+        return ((index - 2) % 3 === 0) ? index : index + 1
+    }
+  }
   changingTheBLeft = (e) => {
-    dontMoveLeft.includes(this.state.index) ? this.setState({ ...this.state }) : this.setState({ ...this.state, steps: this.state.steps + 1, index: this.state.index - 1 });
-    if (e.target.id === "left" && dontMoveLeft.includes(this.state.index)) {
-      this.setState({ ...this.state, click: 0 })
+   // dontmoveleft.includes(this.state.index) ? this.setState({ ...this.state }) : this.setState({ ...this.state, steps: this.state.steps + 1, index: this.state.index - 1 })
+
+    if (e.target.id === "left" && this.getNextIndex('left') === this.state.index) {
+      this.setState({ ...this.state, click: 0, message: "You can’t go left" })
     } else {
-      this.setState({...this.state, steps: this.state.steps + 1, index: this.state.index - 1, click: 3 })
+      this.setState({...this.state, steps: this.state.steps + 1, index: this.state.index - 1, click: 3, message: "" })
     }
   }
   changingTheBRight = (e) => {
-    dontMoveRight.includes(this.state.index) ? this.setState({ ...this.state }) : this.setState({ ...this.state, steps: this.state.steps + 1, index: this.state.index + 1 });
-    if (e.target.id === "right" && dontMoveRight.includes(this.state.index)) {
-      this.setState({ ...this.state, click: 3 })
+    dontmoveright.includes(this.state.index) ? this.setState({ ...this.state }) : this.setState({ ...this.state, steps: this.state.steps + 1, index: this.state.index + 1 });
+    if (e.target.id === "right" && dontmoveright.includes(this.state.index)) {
+      this.setState({ ...this.state, click: 3, message: "You can't go right" })
     } else {
-      this.setState({...this.state, steps: this.state.steps + 1, index: this.state.index + 1, click: 4 })
+      this.setState({...this.state, steps: this.state.steps + 1, index: this.state.index + 1, click: 4, message: "" })
     }
   }
   changingTheBUp = (e) => {
     this.state.index <= up ? this.setState({ ...this.state }) : this.setState({ ...this.state, steps: this.state.steps + 1, index: this.state.index - 3 });
     if (e.target.id === "up" && this.state.index <= up) {
-      this.setState({ ...AppClass.this.state, click: 1 })
+      this.setState({ ...this.state, click: 1 })
     } else {
       this.setState({ ...this.state, steps: this.state.steps + 1, index: this.state.index - 3, click: 4})
     }
@@ -82,7 +96,8 @@ export default class AppClass extends React.Component {
     axios.post("http://localhost:9000/api/result", addstuff)
     .then(resp => {
       const display = resp.data.message
-      this.setState({ ...this.state, final: display, email: "", displayon: true });
+      console.log(display);
+      this.setState({ ...this.state, finalemail: display, email: "", displayon: true });
     })
     .catch(err => {console.log(err.response.data.message)
       this.setState({...this.state, finalemail: err.response.data.message, displayon: true, email: "" });
@@ -111,28 +126,21 @@ export default class AppClass extends React.Component {
           }
         </div>
         <div className="info">
-          <h3 id="message">{ this.state.displayon ? this.state.finalemail : themessage[this.state.click] }</h3>
+          <h3 id="message">{ this.state.displayon ? this.state.finalemail : this.state.message }</h3>
         </div>
         <div id="keypad">
-          <button onAuxClick={this.changingTheBLeft} id="left">LEFT</button>
-          <button onAuxClick={this.changingTheBup} id="up">UP</button>
-          <button onAuxClick={this.changingTheBright} id="right">RIGHT</button>
-          <button onAuxClick={this.changingTheBdown} id="down">DOWN</button>
-          <buttton onAuxClick={this.reset} id={reset}>RESET</buttton>
-          <button id="left">LEFT</button>
-          <button id="up">UP</button>
-          <button id="right">RIGHT</button>
-          <button id="down">DOWN</button>
-          <button id="reset">reset</button>
+          <button onClick={this.changingTheBLeft} id="left">LEFT</button>
+          <button onClick={this.changingTheBUp} id="up">UP</button>
+          <button onClick={this.changingTheBRight} id="right">RIGHT</button>
+          <button onClick={this.changingTheBDown} id="down">DOWN</button>
+          <button onClick={this.reset} id="reset">RESET</button>
+        
         </div>
         <form onSubmit={this.onSubmitHandler}>
-          <input vlaue={this.state.email} onChange={this.onChangeHandler} id="email" type="email" placeholder="type email"></input>
+          <input value={this.state.email} onChange={this.onChangeHandler} id="email" type="email" placeholder="type email"></input>
           <input id="submit" type="submit"></input>
         </form>
-        <form>
-          <input id="email" type="email" placeholder="type email"></input>
-          <input id="submit" type="submit"></input>
-        </form>
+        
       </div>
     )
   }

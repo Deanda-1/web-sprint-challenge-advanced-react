@@ -4,10 +4,10 @@ import { useState } from 'react';
 import axios from 'axios';
 
 // Suggested initial states
-const themessage = ["You can't go left", "You can't go up", "You can't go down", "You can't go right", ""]
+const themessage = ["You can't go left", "You can't go up", "You can't go down", "You can't go right", ""] 
 const coordinates = ["(1,1)", "(2,1)", "(3,1)",
-                     "(2,1)", "(2,2)", "(3,2)",
-                     "(3,1)", "(3,2)", "(3,3)"]
+                     "(1,2)", "(2,2)", "(3,2)",
+                     "(1,3)", "(2,3)", "(3,3)"]
 const dontmoveright = [2, 5, 8]
 const dontmoveleft = [0, 3, 6]
 const up = 2
@@ -29,7 +29,7 @@ const clickable = (e) => {
   setClick(3)
  } else if (e.target.id === "up" && index <= up) {
   setClick(1)
- } else if (e.target.id === "left" && dontmoveleft(index)) {
+ } else if (e.target.id === "left" && dontmoveleft.includes(index)) {
   setClick(0)
  } else if (e.target.id === "down" && index >= down) {
   setClick(2)
@@ -55,7 +55,7 @@ const reset = (e) => {
 const changestepsright = (e) => {
   e.preventDefault()
   dontmoveright.includes(index) ? setSteps(steps) : setSteps(steps + 1)
-  dontmoveright.includes(index) ? setIndex(index) : setIndex(index - 1);
+  dontmoveright.includes(index) ? setIndex(index) : setIndex(index + 1);
   clickable (e) 
 }
 const changestepsup = (e) => {
@@ -79,8 +79,9 @@ function onsubmithandler(e) {
   const addstuff = { x : coordinates[index][1], y: coordinates[index][3], steps : steps, email : email };
   axios.post("http://localhost:9000/api/result", addstuff)
   .then(resp => {
-    const display = resp.data.initialMessage
-    setDisplay(display)
+    const displayMessage = resp.data.message
+    console.log(displayMessage);
+    setDisplay(displayMessage)
     setdisplayon(true)
     setEmail("")
   }) 
@@ -95,7 +96,7 @@ function onsubmithandler(e) {
     <div id="wrapper" className={props.className}>
       <div className="info">
         <h3 id="coordinates">Coordinates {coordinates[index]}</h3>
-        <h3 id="steps">You moved {steps} {steps === 1 ? "time":"times"} times</h3>
+        <h3 id="steps">You moved {steps} {steps === 1 ? "time": "times"} times</h3>
       </div>
       <div id="grid">
         {
