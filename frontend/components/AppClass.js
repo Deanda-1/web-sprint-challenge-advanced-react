@@ -86,7 +86,7 @@ export default class AppClass extends React.Component {
     }
    }
    reset = (e) => {
-    this.setState({ ...this.state, steps: initialSteps, index: initialIndex, click: 4, displayon: false, email: initialEmail })
+    this.setState({ ...this.state, steps: initialSteps, index: initialIndex, click: 4, displayon: false, email: initialEmail, message: "" })
    }
    onSubmitHandler = (e) => {
     e.preventDefault()
