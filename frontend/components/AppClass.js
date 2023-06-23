@@ -22,8 +22,8 @@ const initialIndex = 4 // the index the "B" is at
 const initialState = {
 message: initialMessage,
 email: initialEmail,
+steps: initialSteps,
  index: initialIndex,
- steps: initialSteps,
 } 
 
 export default class AppClass extends React.Component {
@@ -56,13 +56,13 @@ export default class AppClass extends React.Component {
    // dontmoveleft.includes(this.state.index) ? this.setState({ ...this.state }) : this.setState({ ...this.state, steps: this.state.steps + 1, index: this.state.index - 1 })
 
     if (e.target.id === "left" && this.getNextIndex('left') === this.state.index) {
-      this.setState({ ...this.state, click: 0, message: "You can’t go left" })
+      this.setState({ ...this.state, click: 0, message: "You can't go left" })
     } else {
       this.setState({...this.state, steps: this.state.steps + 1, index: this.state.index - 1, click: 3, message: "" })
     }
   }
   changingTheBRight = (e) => {
-    dontmoveright.includes(this.state.index) ? this.setState({ ...this.state }) : this.setState({ ...this.state, steps: this.state.steps + 1, index: this.state.index + 1 });
+    // dontmoveright.includes(this.state.index) ? this.setState({ ...this.state }) : this.setState({ ...this.state, steps: this.state.steps + 1, index: this.state.index + 1 });
     if (e.target.id === "right" && dontmoveright.includes(this.state.index)) {
       this.setState({ ...this.state, click: 3, message: "You can't go right" })
     } else {
@@ -72,17 +72,17 @@ export default class AppClass extends React.Component {
   changingTheBUp = (e) => {
     this.state.index <= up ? this.setState({ ...this.state }) : this.setState({ ...this.state, steps: this.state.steps + 1, index: this.state.index - 3 });
     if (e.target.id === "up" && this.state.index <= up) {
-      this.setState({ ...this.state, click: 1 })
+      this.setState({ ...this.state, click: 1, message: "You can't go up" })
     } else {
-      this.setState({ ...this.state, steps: this.state.steps + 1, index: this.state.index - 3, click: 4})
+      this.setState({ ...this.state, steps: this.state.steps + 1, index: this.state.index - 3, click: 4, message: ""})
     }
   } 
    changingTheBDown = (e) => {
-    this.state.index >= down ? this.setState({ ...this.state }) : this.setState({ ...this.state, steps: this.state.steps + 1, index: this.state.index + 3 });
+   // this.state.index >= down ? this.setState({ ...this.state }) : this.setState({ ...this.state, steps: this.state.steps + 1, index: this.state.index + 3 });
     if (e.target.id === "down" && this.state.index >= down) {
-      this.setState({ ...this.state, click: 2 })
+      this.setState({ ...this.state, click: 2, message: "You can't go down" })
     } else {
-      this.setState({ ...this.state, steps: this.state.steps + 1, index: this.state.index + 3, click: 4 })
+      this.setState({ ...this.state, steps: this.state.steps + 1, index: this.state.index + 3, click: 4, message: "" })
     }
    }
    reset = (e) => {

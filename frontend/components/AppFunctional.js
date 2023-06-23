@@ -27,6 +27,7 @@ export default function AppFunctional(props) {
 const clickable = (e) => {
  if (e.target.id === "right" && dontmoveright.includes(index)) {
   setClick(3)
+
  } else if (e.target.id === "up" && index <= up) {
   setClick(1)
  } else if (e.target.id === "left" && dontmoveleft.includes(index)) {
