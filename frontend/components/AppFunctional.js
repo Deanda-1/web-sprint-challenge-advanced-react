@@ -97,7 +97,7 @@ function onsubmithandler(e) {
     <div id="wrapper" className={props.className}>
       <div className="info">
         <h3 id="coordinates">Coordinates {coordinates[index]}</h3>
-        <h3 id="steps">You moved {steps} {steps === 1 ? "time": "times"} times</h3>
+        <h3 id="steps">You moved {steps} {steps === 1 ? "time": "times"}</h3>
       </div>
       <div id="grid">
         {
